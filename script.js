@@ -50,6 +50,12 @@ function weather(cityName) {
       windspeed.textContent = response.wind.speed + "mph";
       findUV(response.coord.lon, response.coord.lat);
       forcast(cityName);
+      if (response.cod == 200) {
+        listCity = JSON.parse(localStorage.getItem("places"));
+        listCity.push(cityName);
+        localStorage.setItem("places", JSON.stringify(listCity));
+        searchHistory(cityName);
+      }
     });
 }
 function findUV(lon, lat) {
