@@ -48,14 +48,15 @@ function weather(cityName) {
       temperature.textContent = response.main.temp;
       humidity.textContent = response.main.humidity + "%";
       windspeed.textContent = response.wind.speed + "mph";
-      findUV(response.coord.lon, response.coord.lat);
-      forcast(cityName);
       if (response.cod == 200) {
-        listCity = JSON.parse(localStorage.getItem("places"));
-        listCity.push(cityName);
+        listCity = [];
+        // listCity = JSON.parse(localStorage.getItem("places"));
+        listCity.push(cityName.toUpperCase());
         localStorage.setItem("places", JSON.stringify(listCity));
         searchHistory(cityName);
       }
+      findUV(response.coord.lon, response.coord.lat);
+      forcast(cityName);
     });
 }
 function findUV(lon, lat) {
@@ -97,4 +98,15 @@ function forcast(cityName) {
         document.getElementById("fHumidity" + i).textContent = humidity + "%";
       }
     });
+}
+
+function searchHistory(cityName) {
+  // var ul = document.getElementsByClassName("list");
+  // var li = document.createElement("li");
+  // li.textContent = cityName;
+  // ul.appendChild(li);
+  var li = $("<li>" + cityName + "</li>");
+  $(li).attr("class", "list-item");
+  $(li).attr("data-value", cityName);
+  $(".list").append(li);
 }
