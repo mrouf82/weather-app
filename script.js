@@ -49,10 +49,11 @@ function weather(cityName) {
       humidity.textContent = response.main.humidity + "%";
       windspeed.textContent = response.wind.speed + "mph";
       if (response.cod == 200) {
-        listCity = [];
-        // listCity = JSON.parse(localStorage.getItem("places"));
-        listCity.push(cityName.toUpperCase());
+        listCity = JSON.parse(localStorage.getItem("places"));
+
+        listCity.push(cityName);
         localStorage.setItem("places", JSON.stringify(listCity));
+
         searchHistory(cityName);
       }
       findUV(response.coord.lon, response.coord.lat);
@@ -110,3 +111,12 @@ function searchHistory(cityName) {
   $(li).attr("data-value", cityName);
   $(".list").append(li);
 }
+window.addEventListener("load", function load() {
+  var listCity = JSON.parse(localStorage.getItem("places"));
+  listCity = JSON.parse(localStorage.getItem("places"));
+  for (i = 0; i < listCity.length; i++) {
+    searchHistory(listCity[i]);
+  }
+  cityName = listCity[i - 1];
+  currentWeather(cityName);
+});
