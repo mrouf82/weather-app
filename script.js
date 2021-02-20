@@ -25,11 +25,13 @@ form.addEventListener("submit", function (event) {
 
 function display(cityName) {
   if (cityName !== "") {
+    // makes sure search isn't nothing
     weather(cityName);
   }
 }
-var proxy = "http://cors-anywhere.herokuapp.com/";
+//api key below
 var apiKey = "b15bd32eadfe77cf8c5d312f33bcb3f8";
+//function to call the city by name
 function weather(cityName) {
   fetch(
     `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=imperial`
@@ -67,10 +69,33 @@ function findUV(lon, lat) {
       return data.json();
     })
     .then(function (response) {
+      console.log(response);
+      var value = response.current.uvi;
       uvIndex.textContent = response.current.uvi;
+      uvChange(value);
     });
 }
 
+function uvChange(value) {
+  console.log(value);
+  if (value < 3) {
+    uvIndex.classList.remove("bg-danger");
+    uvIndex.classList.remove("bg-warning");
+    uvIndex.classList.add("bg-success");
+    uvIndex.classList.add("text-white");
+  } else if (value > 8) {
+    uvIndex.classList.remove("bg-sucess");
+    uvIndex.classList.remove("bg-warning");
+    uvIndex.classList.add("bg-danger");
+    uvIndex.classList.add("text-white");
+  } else {
+    uvIndex.classList.remove("bg-sucess");
+    uvIndex.classList.remove("bg-danger");
+    uvIndex.classList.add("bg-warning");
+    uvIndex.classList.add("text-white");
+  }
+}
+//function calls city's 5 day forcast
 function forcast(cityName) {
   fetch(
     `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}`
@@ -99,7 +124,7 @@ function forcast(cityName) {
       }
     });
 }
-
+//creates a list of the cities searched
 function searchHistory(cityName) {
   // var ul = document.getElementsByClassName("list");
   // var li = document.createElement("li");
@@ -110,6 +135,12 @@ function searchHistory(cityName) {
   $(li).attr("data-value", cityName);
   $(".list").append(li);
 }
+document.addEventListener("click", function click(event) {
+  if (event.target.matches("li")) {
+    cityName = event.target.textContent;
+    weather(cityName);
+  }
+});
 
 window.addEventListener("load", function load() {
   var listCity = JSON.parse(localStorage.getItem("places"));
